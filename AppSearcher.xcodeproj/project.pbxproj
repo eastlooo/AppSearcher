@@ -22,6 +22,15 @@
 		A76CAF9828A6426A004E6DF4 /* URLSessionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CAF9728A6426A004E6DF4 /* URLSessionable.swift */; };
 		A76CAF9A28A64292004E6DF4 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CAF9928A64292004E6DF4 /* Provider.swift */; };
 		A76CAF9C28A642CB004E6DF4 /* DefaultProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CAF9B28A642CB004E6DF4 /* DefaultProvider.swift */; };
+		A76CAFA828A683BE004E6DF4 /* FetchAppInfoRequestDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CAFA728A683BE004E6DF4 /* FetchAppInfoRequestDTO.swift */; };
+		A76CAFAC28A68404004E6DF4 /* FetchAppInfoResponseDTO+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CAFAB28A68404004E6DF4 /* FetchAppInfoResponseDTO+Mapping.swift */; };
+		A76CAFAE28A684F8004E6DF4 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CAFAD28A684F8004E6DF4 /* AppInfo.swift */; };
+		A76CAFB028A68EE1004E6DF4 /* APIEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CAFAF28A68EE1004E6DF4 /* APIEndpoints.swift */; };
+		A76CAFB228A6916B004E6DF4 /* ImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CAFB128A6916B004E6DF4 /* ImageRepository.swift */; };
+		A76CAFB428A6917C004E6DF4 /* DefaultImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CAFB328A6917C004E6DF4 /* DefaultImageRepository.swift */; };
+		A76CAFB628A6B5F4004E6DF4 /* ControlPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CAFB528A6B5F4004E6DF4 /* ControlPublisher.swift */; };
+		A76CAFB828A6E01C004E6DF4 /* AppInfoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CAFB728A6E01C004E6DF4 /* AppInfoRepository.swift */; };
+		A76CAFBA28A6E02C004E6DF4 /* DefaultAppInfoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76CAFB928A6E02C004E6DF4 /* DefaultAppInfoRepository.swift */; };
 		A78D042128A54BC5000625D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78D042028A54BC5000625D3 /* AppDelegate.swift */; };
 		A78D042328A54BC5000625D3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78D042228A54BC5000625D3 /* SceneDelegate.swift */; };
 		A78D042A28A54BC6000625D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A78D042928A54BC6000625D3 /* Assets.xcassets */; };
@@ -44,6 +53,15 @@
 		A76CAF9728A6426A004E6DF4 /* URLSessionable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionable.swift; sourceTree = "<group>"; };
 		A76CAF9928A64292004E6DF4 /* Provider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
 		A76CAF9B28A642CB004E6DF4 /* DefaultProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultProvider.swift; sourceTree = "<group>"; };
+		A76CAFA728A683BE004E6DF4 /* FetchAppInfoRequestDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchAppInfoRequestDTO.swift; sourceTree = "<group>"; };
+		A76CAFAB28A68404004E6DF4 /* FetchAppInfoResponseDTO+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FetchAppInfoResponseDTO+Mapping.swift"; sourceTree = "<group>"; };
+		A76CAFAD28A684F8004E6DF4 /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
+		A76CAFAF28A68EE1004E6DF4 /* APIEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIEndpoints.swift; sourceTree = "<group>"; };
+		A76CAFB128A6916B004E6DF4 /* ImageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRepository.swift; sourceTree = "<group>"; };
+		A76CAFB328A6917C004E6DF4 /* DefaultImageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultImageRepository.swift; sourceTree = "<group>"; };
+		A76CAFB528A6B5F4004E6DF4 /* ControlPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPublisher.swift; sourceTree = "<group>"; };
+		A76CAFB728A6E01C004E6DF4 /* AppInfoRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoRepository.swift; sourceTree = "<group>"; };
+		A76CAFB928A6E02C004E6DF4 /* DefaultAppInfoRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAppInfoRepository.swift; sourceTree = "<group>"; };
 		A78D041D28A54BC5000625D3 /* AppSearcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppSearcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A78D042028A54BC5000625D3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A78D042228A54BC5000625D3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -96,6 +114,7 @@
 			children = (
 				A76CAF7628A57221004E6DF4 /* Extension++.swift */,
 				A76CAF7C28A60E63004E6DF4 /* Combine++UIControl.swift */,
+				A76CAFB528A6B5F4004E6DF4 /* ControlPublisher.swift */,
 				A76CAF8028A6159B004E6DF4 /* ViewModelType.swift */,
 			);
 			path = Util;
@@ -104,6 +123,8 @@
 		A76CAF7828A57435004E6DF4 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				A76CAF9E28A682D0004E6DF4 /* Entitiy */,
+				A76CAF9D28A682C8004E6DF4 /* Interface */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -111,6 +132,8 @@
 		A76CAF7928A5743D004E6DF4 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				A76CAFA128A682FB004E6DF4 /* Repository */,
+				A76CAFA028A682F5004E6DF4 /* Network */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -178,6 +201,58 @@
 				A76CAF9328A64002004E6DF4 /* Endpoint.swift */,
 			);
 			path = Endpoint;
+			sourceTree = "<group>";
+		};
+		A76CAF9D28A682C8004E6DF4 /* Interface */ = {
+			isa = PBXGroup;
+			children = (
+				A76CAF9F28A682DD004E6DF4 /* Repository */,
+			);
+			path = Interface;
+			sourceTree = "<group>";
+		};
+		A76CAF9E28A682D0004E6DF4 /* Entitiy */ = {
+			isa = PBXGroup;
+			children = (
+				A76CAFAD28A684F8004E6DF4 /* AppInfo.swift */,
+			);
+			path = Entitiy;
+			sourceTree = "<group>";
+		};
+		A76CAF9F28A682DD004E6DF4 /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				A76CAFB128A6916B004E6DF4 /* ImageRepository.swift */,
+				A76CAFB728A6E01C004E6DF4 /* AppInfoRepository.swift */,
+			);
+			path = Repository;
+			sourceTree = "<group>";
+		};
+		A76CAFA028A682F5004E6DF4 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				A76CAFAF28A68EE1004E6DF4 /* APIEndpoints.swift */,
+				A76CAFA628A68361004E6DF4 /* DataMapping */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		A76CAFA128A682FB004E6DF4 /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				A76CAFB328A6917C004E6DF4 /* DefaultImageRepository.swift */,
+				A76CAFB928A6E02C004E6DF4 /* DefaultAppInfoRepository.swift */,
+			);
+			path = Repository;
+			sourceTree = "<group>";
+		};
+		A76CAFA628A68361004E6DF4 /* DataMapping */ = {
+			isa = PBXGroup;
+			children = (
+				A76CAFA728A683BE004E6DF4 /* FetchAppInfoRequestDTO.swift */,
+				A76CAFAB28A68404004E6DF4 /* FetchAppInfoResponseDTO+Mapping.swift */,
+			);
+			path = DataMapping;
 			sourceTree = "<group>";
 		};
 		A78D041428A54BC5000625D3 = {
@@ -281,19 +356,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A76CAFAC28A68404004E6DF4 /* FetchAppInfoResponseDTO+Mapping.swift in Sources */,
+				A76CAFAE28A684F8004E6DF4 /* AppInfo.swift in Sources */,
 				A76CAF9C28A642CB004E6DF4 /* DefaultProvider.swift in Sources */,
 				A76CAF7228A56E15004E6DF4 /* MainViewController.swift in Sources */,
 				A76CAF8628A62C1D004E6DF4 /* SearchView.swift in Sources */,
 				A78D042128A54BC5000625D3 /* AppDelegate.swift in Sources */,
+				A76CAFA828A683BE004E6DF4 /* FetchAppInfoRequestDTO.swift in Sources */,
 				A76CAF7D28A60E63004E6DF4 /* Combine++UIControl.swift in Sources */,
 				A78D042328A54BC5000625D3 /* SceneDelegate.swift in Sources */,
+				A76CAFB428A6917C004E6DF4 /* DefaultImageRepository.swift in Sources */,
 				A76CAF9028A63FF0004E6DF4 /* Requestable.swift in Sources */,
 				A76CAF9828A6426A004E6DF4 /* URLSessionable.swift in Sources */,
 				A76CAF9228A63FFC004E6DF4 /* Responsable.swift in Sources */,
 				A76CAF8828A62C22004E6DF4 /* SearchViewModel.swift in Sources */,
+				A76CAFBA28A6E02C004E6DF4 /* DefaultAppInfoRepository.swift in Sources */,
+				A76CAFB228A6916B004E6DF4 /* ImageRepository.swift in Sources */,
+				A76CAFB828A6E01C004E6DF4 /* AppInfoRepository.swift in Sources */,
 				A76CAF7728A57221004E6DF4 /* Extension++.swift in Sources */,
 				A76CAF8128A6159B004E6DF4 /* ViewModelType.swift in Sources */,
+				A76CAFB028A68EE1004E6DF4 /* APIEndpoints.swift in Sources */,
 				A76CAF9628A64101004E6DF4 /* NetworkError.swift in Sources */,
+				A76CAFB628A6B5F4004E6DF4 /* ControlPublisher.swift in Sources */,
 				A76CAF9428A64002004E6DF4 /* Endpoint.swift in Sources */,
 				A76CAF9A28A64292004E6DF4 /* Provider.swift in Sources */,
 				A76CAF8328A615C3004E6DF4 /* MainViewModel.swift in Sources */,

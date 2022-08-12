@@ -13,11 +13,9 @@ final class MainViewController: UIViewController {
     // MARK: Properties
     private let viewModel: MainViewModel
     private var cancellables = Set<AnyCancellable>()
-    
     private let topView = UIView()
     private let bottomView = UIView()
     private let searchView: SearchView
-    private let toolBar = UIToolbar()
     
     private let messageLabel: UILabel = {
         let label = UILabel()
@@ -34,13 +32,7 @@ final class MainViewController: UIViewController {
         button.adjustsImageWhenHighlighted = false
         return button
     }()
-    
-    private let searchBarButton = UIBarButtonItem(
-        barButtonSystemItem: .search,
-        target: nil,
-        action: nil
-    )
-    
+
     // MARK: Lifecycle
     init(viewModel: MainViewModel) {
         let searchViewModel = viewModel.subViewModels.searchViewModel
@@ -57,19 +49,27 @@ final class MainViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: Animations
+    private func animateSearchViewHeight(show: Bool) {
+        let height = show ? 80.0 : 0
+        UIView.animate(withDuration: 0.4) {
+            NSLayoutConstraint.activate(
+                self.searchView.constraints
+                    .filter { $0.firstAttribute == .height }
+                    .map { constraint -> NSLayoutConstraint in
+                        constraint.constant = height
+                        return constraint
+                    }
+            )
+            self.view.layoutIfNeeded()
+        }
+    }
+    
     // MARK: Helpers
     private func configure() {
         view.backgroundColor = .white
         topView.backgroundColor = .primary
         bottomView.backgroundColor = .primary
-        
-        let leftSpacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        toolBar.sizeToFit()
-        let rightSpacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        toolBar.sizeToFit()
-        toolBar.tintColor = .primary
-        toolBar.setItems([leftSpacer, searchBarButton, rightSpacer], animated: false)
-        searchView.setInputAccessoryView(toolBar)
     }
     
     private func layout() {
@@ -115,7 +115,7 @@ final class MainViewController: UIViewController {
                 toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(
                 item: guideButton, attribute: .centerY, relatedBy: .equal,
-                toItem: view, attribute: .centerY, multiplier: 1.0, constant: -30.0),
+                toItem: view, attribute: .centerY, multiplier: 1.0, constant: -35.0),
             guideButton.widthAnchor.constraint(equalToConstant: 170.0),
             guideButton.heightAnchor.constraint(equalToConstant: 170.0),
         ])
@@ -127,8 +127,8 @@ final class MainViewController: UIViewController {
                 item: messageLabel, attribute: .centerX, relatedBy: .equal,
                 toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(
-                item: messageLabel, attribute: .bottom, relatedBy: .equal,
-                toItem: guideButton, attribute: .top, multiplier: 1.0, constant: -21.0),
+                item: messageLabel, attribute: .top, relatedBy: .equal,
+                toItem: guideButton, attribute: .centerY, multiplier: 1.0, constant: 100.0),
         ])
         
         view.addSubview(searchView)
@@ -143,11 +143,28 @@ final class MainViewController: UIViewController {
             NSLayoutConstraint(
                 item: searchView, attribute: .right, relatedBy: .equal,
                 toItem: view, attribute: .right, multiplier: 1.0, constant: 0),
-            searchView.heightAnchor.constraint(equalToConstant: 80.0),
+            searchView.heightAnchor.constraint(equalToConstant: 0),
         ])
     }
     
     private func bind() {
+        guideButton.tapPublisher
+            .sink { [weak self] _ in
+                self?.viewModel.input.guideButtonTapped.send()
+            }
+            .store(in: &cancellables)
         
+        viewModel.output.isSearchingMode
+            .receive(on: DispatchQueue.main)
+            .dropFirst()
+            .sink { [weak self] isSearchingMode in
+                self?.animateSearchViewHeight(show: isSearchingMode)
+                self?.searchView.setFirstResponder(to: isSearchingMode)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    self?.messageLabel.isHidden = isSearchingMode
+                }
+
+            }
+            .store(in: &cancellables)
     }
 }
