@@ -8,8 +8,8 @@
 import Foundation
 
 protocol URLSessionable {
-    func dataTask(with request: URLRequest, completionHandler: @escaping(Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask
-    func dataTask(with url: URL, completionHandler: @escaping(Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask
+    func dataTaskPublisher(for request: URLRequest) -> URLSession.DataTaskPublisher
+    func dataTaskPublisher(for url: URL) -> URLSession.DataTaskPublisher
 }
 
 extension URLSession: URLSessionable {}
