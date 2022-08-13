@@ -8,30 +8,44 @@
 import Foundation
 
 struct AppInfo {
+    let main: Main
+    let screenshotURLs: [URL?]
+    let introduce: Introduce
+    let newFeature: NewFeature
+    let additional: Additional
+}
+
+extension AppInfo {
+    struct Main {
+        let appName: String // 앱 이름
+        let appImageURL: URL? // 앱 아이콘
+        let rating: Double // 평가
+        let marketURL: URL? // 앱스토어 이동, 공유
+    }
     
-    struct MainInfo {}
+    struct Introduce {
+        let artistName: String // 제작자
+        let description: String // 앱 설명
+    }
     
-    let appName: String
-    let appImageURL: URL?
-    let storeURL: URL?
+    struct NewFeature {
+        let newVersion: String // 앱 버전
+        let updatedDate: Date? // 업데이트 날짜
+        let releaseNotes: String // 업데이트 내용
+    }
     
-    let rating: Double
-    
-    
-    /*
-     # Main
-     1. 앱 이름 -> trackName: String
-     2. 앱 아이콘 -> artworkUrl100: String
-     3. 앱스토어 이동, 공유하기 -> trackViewUrl: String
-     
-     4. 평가 -> averageUserRating: Double
-     5. 연령 -> contentAdvisoryRating: String
-     
-     
-     */
+    struct Additional {
+        let provider: String // 제공자
+        let category: String // 카테고리
+        let languages: [String] // 언어
+        let supportedDevices: [String] // 지원기기 목록
+        let minimumVersion: String // 앱 최소 버전
+        let ageRating: String // 연령 등급
+        let fileSizeBytes: Double? // 파일 크기
+    }
 }
 
 struct AppInfoPage {
     let count: Int
-    let appInfo: [AppInfo]
+    let appInfos: [AppInfo]
 }

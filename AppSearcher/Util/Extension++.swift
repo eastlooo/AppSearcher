@@ -7,6 +7,29 @@
 
 import UIKit
 
+// MARK: - UIColor
 extension UIColor {
     class var primary: UIColor? { return UIColor(named: "primary") }
+}
+
+// MARK: - Date
+extension Date {
+    func toString(dateFormat: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en")
+        dateFormatter.timeZone = TimeZone(identifier: TimeZone.current.identifier)
+        dateFormatter.dateFormat = dateFormat
+        return dateFormatter.string(from: self)
+    }
+}
+
+// MARK: - String
+extension String {
+    func toDate(format: String) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en")
+        dateFormatter.timeZone = TimeZone(identifier: TimeZone.current.identifier)
+        dateFormatter.dateFormat = format
+        return dateFormatter.date(from: self)
+    }
 }
