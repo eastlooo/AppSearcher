@@ -49,10 +49,20 @@ final class MainViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            let viewController = DetailContainerViewController()
+            viewController.modalPresentationStyle = .overFullScreen
+            self.present(viewController, animated: false)
+        }
+    }
+    
     // MARK: Animations
     private func animateSearchViewHeight(show: Bool) {
         let height = show ? 80.0 : 0
-        UIView.animate(withDuration: 0.4) {
+        UIView.animate(withDuration: 0.3) {
             NSLayoutConstraint.activate(
                 self.searchView.constraints
                     .filter { $0.firstAttribute == .height }

@@ -10,6 +10,7 @@ import UIKit
 // MARK: - UIColor
 extension UIColor {
     class var primary: UIColor? { return UIColor(named: "primary") }
+    class var background: UIColor? { return UIColor(named: "background") }
 }
 
 // MARK: - Date

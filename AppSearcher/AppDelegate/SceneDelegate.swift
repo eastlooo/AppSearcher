@@ -15,10 +15,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         window?.tintColor = .primary
+        
         let viewModel = MainViewModel()
-        let rootViewController = MainViewController(viewModel: viewModel)
-        let viewController = UINavigationController(rootViewController: rootViewController)
-        viewController.navigationBar.isHidden = true
+        let viewController = MainViewController(viewModel: viewModel)
         window?.rootViewController = viewController
         window?.makeKeyAndVisible()
     }
