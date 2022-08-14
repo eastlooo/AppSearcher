@@ -14,6 +14,8 @@ final class DetailContainerViewController: UIViewController {
     private var dismissibleHeight: CGFloat { defaultHeight * 0.7 }
     private var currentContainerHeight: CGFloat = UIScreen.main.bounds.height - safeAreaTopInset
     
+    private var storedTanslationY: CGFloat = 0
+    
     private lazy var containerHeightConstraint = containerView.heightAnchor.constraint(equalToConstant: defaultHeight)
     private lazy var containerBottomConstraint = NSLayoutConstraint(
         item: containerView, attribute: .bottom, relatedBy: .equal,
@@ -28,23 +30,27 @@ final class DetailContainerViewController: UIViewController {
     
     private let holderView: UIView = {
         let view = UIView()
-        view.backgroundColor = .systemGray
+        view.backgroundColor = .white
         view.layer.cornerRadius = 2.5
         return view
     }()
     
-    private let panGesture: UIPanGestureRecognizer = {
+    private lazy var panGesture: UIPanGestureRecognizer = {
         let panGesture = UIPanGestureRecognizer()
         panGesture.delaysTouchesBegan = false
         panGesture.delaysTouchesEnded = false
+        panGesture.addTarget(self, action: #selector(handlePanGesture))
+        panGesture.delegate = self
         return panGesture
     }()
     
+    private let rootViewController: DetailViewController
     private let childViewController: UINavigationController
     
     // MARK: Lifecycle
     init() {
         let rootViewController = DetailViewController()
+        self.rootViewController = rootViewController
         self.childViewController = UINavigationController(rootViewController: rootViewController)
         super.init(nibName: nil, bundle: nil)
         
@@ -96,12 +102,20 @@ final class DetailContainerViewController: UIViewController {
     // MARK: Actions
     @objc
     private func handlePanGesture(gesture: UIPanGestureRecognizer) {
+        
         let translation = gesture.translation(in: view)
-        let newHeight = currentContainerHeight - translation.y
+        
+        guard rootViewController.isScrollsTop else {
+            storedTanslationY = translation.y
+            return
+        }
+        
+        let newHeight = currentContainerHeight - translation.y + storedTanslationY
  
         switch gesture.state {
         case .changed:
             if newHeight < defaultHeight {
+                rootViewController.isScrollEnabled = false
                 containerHeightConstraint.constant = newHeight
                 view.layoutIfNeeded()
             }
@@ -109,10 +123,12 @@ final class DetailContainerViewController: UIViewController {
         case .ended:
             if newHeight < dismissibleHeight {
                 animateDismissView()
-            } else if newHeight < defaultHeight {
+            } else {
                 animateContainerHeight(defaultHeight)
                 currentContainerHeight = defaultHeight
             }
+            rootViewController.isScrollEnabled = true
+            storedTanslationY = 0
 
         default:
             break
@@ -124,8 +140,15 @@ final class DetailContainerViewController: UIViewController {
         view.backgroundColor = .clear
         containerView.backgroundColor = .white
         
-        panGesture.addTarget(self, action: #selector(handlePanGesture))
-        childViewController.navigationBar.addGestureRecognizer(panGesture)
+        let navigationBar = childViewController.navigationBar
+        containerView.addGestureRecognizer(panGesture)
+        navigationBar.tintColor = .white
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .primary
+        navigationBar.standardAppearance = appearance
+        navigationBar.scrollEdgeAppearance = appearance
     }
     
     private func layout() {
@@ -149,7 +172,7 @@ final class DetailContainerViewController: UIViewController {
         NSLayoutConstraint.activate([
             NSLayoutConstraint(
                 item: childView, attribute: .top, relatedBy: .equal,
-                toItem: containerView, attribute: .top, multiplier: 1.0, constant: 10.0),
+                toItem: containerView, attribute: .top, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(
                 item: childView, attribute: .left, relatedBy: .equal,
                 toItem: containerView, attribute: .left, multiplier: 1.0, constant: 0),
@@ -167,12 +190,18 @@ final class DetailContainerViewController: UIViewController {
         NSLayoutConstraint.activate([
             NSLayoutConstraint(
                 item: holderView, attribute: .top, relatedBy: .equal,
-                toItem: containerView, attribute: .top, multiplier: 1.0, constant: 20.0),
+                toItem: containerView, attribute: .top, multiplier: 1.0, constant: 15.0),
             NSLayoutConstraint(
                 item: holderView, attribute: .centerX, relatedBy: .equal,
                 toItem: containerView, attribute: .centerX, multiplier: 1.0, constant: 0),
             holderView.widthAnchor.constraint(equalToConstant: 45.0),
             holderView.heightAnchor.constraint(equalToConstant: 5.0),
         ])
+    }
+}
+
+extension DetailContainerViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

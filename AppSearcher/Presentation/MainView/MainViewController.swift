@@ -52,7 +52,7 @@ final class MainViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             let viewController = DetailContainerViewController()
             viewController.modalPresentationStyle = .overFullScreen
             self.present(viewController, animated: false)

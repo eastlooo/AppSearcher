@@ -1,20 +1,19 @@
 //
-//  DetailNewFeatureCell.swift
+//  ScreenshotViewController.swift
 //  AppSearcher
 //
-//  Created by 정동천 on 2022/08/13.
+//  Created by 정동천 on 2022/08/14.
 //
 
 import UIKit
 
-final class DetailNewFeatureCell: UICollectionViewCell {
+final class ScreenshotViewController: UIViewController {
     
     // MARK: Properties
-    static var reuseIdentifier: String { "DetailNewFeatureCell" }
     
     // MARK: Lifecycle
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init() {
+        super.init(nibName: nil, bundle: nil)
         
         configure()
         layout()
@@ -26,17 +25,10 @@ final class DetailNewFeatureCell: UICollectionViewCell {
     
     // MARK: Helpers
     private func configure() {
-        
+        view.backgroundColor = .white
     }
     
     private func layout() {
-        
-    }
-}
-
-// MARK: - Bind
-extension DetailNewFeatureCell {
-    func bind() {
         
     }
 }

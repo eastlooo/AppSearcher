@@ -34,3 +34,39 @@ extension String {
         return dateFormatter.date(from: self)
     }
 }
+
+// MARK: - CALayer
+extension CALayer {
+    enum ShadowDirection {
+        case top, left, right, bottom
+    }
+    
+    static func createShadowLayer(color: UIColor? = .black,
+                                  opacity: Float = 0.1,
+                                  offSet: CGSize,
+                                  radius: CGFloat = 2.0) -> CALayer {
+        let layer = CALayer()
+        layer.masksToBounds = false
+        layer.shadowColor = color?.cgColor
+        layer.shadowOpacity = opacity
+        layer.shadowOffset = offSet
+        layer.shadowRadius = radius
+        return layer
+    }
+    
+    static func createTopShadowLayer(position: CGFloat = 4.0) -> CALayer {
+        CALayer.createShadowLayer(offSet: .init(width: 0, height: -position))
+    }
+    
+    static func createLeftShadowLayer(position: CGFloat = 4.0) -> CALayer {
+        CALayer.createShadowLayer(offSet: .init(width: -position, height: 0))
+    }
+    
+    static func createRightShadowLayer(position: CGFloat = 4.0) -> CALayer {
+        CALayer.createShadowLayer(offSet: .init(width: position, height: -0))
+    }
+    
+    static func createBottomShadowLayer(position: CGFloat = 4.0) -> CALayer {
+        CALayer.createShadowLayer(offSet: .init(width: 0, height: position))
+    }
+}
