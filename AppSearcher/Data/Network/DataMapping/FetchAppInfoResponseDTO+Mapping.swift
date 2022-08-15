@@ -14,7 +14,6 @@ struct FetchAppInfoResponseDTO: Decodable {
 
 extension FetchAppInfoResponseDTO {
     struct ResultDTO: Decodable {
-        let supportedDevices: [String]
         let screenshotUrls: [String]
         let artworkUrl512: String
         let releaseNotes: String
@@ -24,7 +23,6 @@ extension FetchAppInfoResponseDTO {
         let sellerName: String
         let trackName: String
         let currentVersionReleaseDate: String
-        let minimumOsVersion: String
         let languageCodesISO2A: [String]
         let fileSizeBytes: String
         let formattedPrice: String
@@ -56,12 +54,13 @@ extension FetchAppInfoResponseDTO {
             let koreanLocale = Locale(identifier: "ko_KR")
             let languages = languageCodes
                 .compactMap { koreanLocale.localizedString(forLanguageCode: $0) }
-            let fileSizeBytes = Double(result.fileSizeBytes)
+            let fileSizeBytes = UInt(result.fileSizeBytes)
             
             let main = AppInfo.Main(
                 appName: result.trackName,
                 appImageURL: appImageURL,
                 rating: result.averageUserRating,
+                userRatingCount: result.userRatingCount,
                 marketURL: marketURL)
             
             let screenshotUrls = result.screenshotUrls
@@ -80,8 +79,7 @@ extension FetchAppInfoResponseDTO {
                 provider: result.sellerName,
                 category: result.primaryGenreName,
                 languages: languages,
-                supportedDevices: result.supportedDevices,
-                minimumVersion: result.minimumOsVersion,
+                price: result.formattedPrice,
                 ageRating: result.contentAdvisoryRating,
                 fileSizeBytes: fileSizeBytes)
             

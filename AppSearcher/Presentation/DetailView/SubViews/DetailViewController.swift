@@ -6,26 +6,54 @@
 //
 
 import UIKit
+import Combine
 
 final class DetailViewController: UIViewController {
     
     // MARK: Properties
-    var isScrollEnabled: Bool = false
-    private(set) var isScrollsTop: Bool = true
+    var isScrollEnabled: Bool = false // <-> ContainerView
+    private(set) var isScrollsTop: Bool = true // <-> ContainerView
+    
+    private let viewModel: DetailViewModel
+    private var cancellables = Set<AnyCancellable>()
+    
+    private var mainDataSource: DetailMainCellViewModel? {
+        didSet { updateMainSection(mainDataSource) }
+    }
+    
+    private var screenshotDataSource: [DetailScreenshotCellViewModel] = [] {
+        didSet { updateScreenshotSection() }
+    }
+    
+    private var introduceDataSource: DetailIntroduceCellViewModel? {
+        didSet { updateIntroduceSection(introduceDataSource) }
+    }
+    
+    private var newFeatureDataSource: AppInfo.NewFeature? {
+        didSet { updateNewFeatureSection(newFeatureDataSource) }
+    }
+    
+    private var additionalDataSource: [(String, String?)] = [] {
+        didSet { updateAddtionalSection() }
+    }
     
     private let collectionView = DetailCollectionView()
     
     // MARK: Lifecycle
-    init() {
+    init(viewModel: DetailViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         
         configure()
         layout()
+        bind()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    deinit { print("DetailViewController deinit..") }
     
     // MARK: Helpers
     private func configure() {
@@ -54,6 +82,88 @@ final class DetailViewController: UIViewController {
                 toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0),
         ])
     }
+    
+    private func bind() {
+        viewModel.output.mainDataSource
+            .compactMap { $0 }
+            .sink { [weak self] dataSource in
+                self?.mainDataSource = dataSource
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.screenshotDataSource
+            .sink { [weak self] dataSource in
+                self?.screenshotDataSource = dataSource
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.introduceDataSource
+            .compactMap { $0 }
+            .sink { [weak self] dataSource in
+                self?.introduceDataSource = dataSource
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.newFeatureDataSource
+            .sink { [weak self] dataSource in
+                self?.newFeatureDataSource = dataSource
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.additionalDataSource
+            .sink { [weak self] dataSource in
+                self?.additionalDataSource = dataSource
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.openShare
+            .compactMap { $0 }
+            .sink { [weak self] url in
+                let viewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                viewController.popoverPresentationController?.sourceView = self?.view
+                self?.present(viewController, animated: true)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.updateCollectionLayout
+            .sink { [weak self] _ in
+                self?.collectionView.collectionViewLayout.invalidateLayout()
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func updateMainSection(_ dataSource: DetailMainCellViewModel?) {
+        guard dataSource != nil else { return }
+        DispatchQueue.main.async {
+            self.collectionView.reloadSections(.init(integer: 0))
+        }
+    }
+    
+    private func updateScreenshotSection() {
+        DispatchQueue.main.async {
+            self.collectionView.reloadSections(.init(integer: 1))
+        }
+    }
+    
+    private func updateIntroduceSection(_ dataSource: DetailIntroduceCellViewModel?) {
+        guard dataSource != nil else { return }
+        DispatchQueue.main.async {
+            self.collectionView.reloadSections(.init(integer: 2))
+        }
+    }
+    
+    private func updateNewFeatureSection(_ dataSource: AppInfo.NewFeature?) {
+        guard dataSource != nil else { return }
+        DispatchQueue.main.async {
+            self.collectionView.reloadSections(.init(integer: 3))
+        }
+    }
+    
+    private func updateAddtionalSection() {
+        DispatchQueue.main.async {
+            self.collectionView.reloadSections(.init(integer: 4))
+        }
+    }
 }
 
 // MARK: - UICollectionViewDataSource
@@ -65,8 +175,8 @@ extension DetailViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0, 2, 3: return 1
-        case 1: return 7
-        case 4: return 6
+        case 1: return screenshotDataSource.count
+        case 4: return additionalDataSource.count
         default: return 0 }
     }
     
@@ -76,35 +186,35 @@ extension DetailViewController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: DetailMainCell.reuseIdentifier,
                 for: indexPath) as! DetailMainCell
-            
+            mainDataSource.map { cell.bind(with: $0) }
             return cell
             
         case 1:
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: DetailScreenshotCell.reuseIdentifier,
                 for: indexPath) as! DetailScreenshotCell
-                
+            cell.bind(with: screenshotDataSource[indexPath.item])
             return cell
             
         case 2:
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: DetailIntroduceCell.reuseIdentifier,
                 for: indexPath) as! DetailIntroduceCell
-            cell.delegate = self
+            introduceDataSource.map { cell.bind(with: $0) }
             return cell
             
         case 3:
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: DetailNewFeatureCell.reuseIdentifier,
                 for: indexPath) as! DetailNewFeatureCell
-                
+            newFeatureDataSource.map { cell.bind(with: $0) }
             return cell
             
         case 4:
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: DetailAdditionalCell.reuseIdentifier,
                 for: indexPath) as! DetailAdditionalCell
-                
+            cell.bind(with: additionalDataSource[indexPath.item])
             return cell
             
         default:
@@ -146,11 +256,5 @@ extension DetailViewController: UICollectionViewDelegate {
         } else {
             isScrollsTop = false
         }
-    }
-}
-
-extension DetailViewController: DetailIntroduceCellDelegate {
-    func updateLayout() {
-        collectionView.collectionViewLayout.invalidateLayout()
     }
 }

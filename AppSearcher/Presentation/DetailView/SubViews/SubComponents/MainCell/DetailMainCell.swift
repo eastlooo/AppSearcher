@@ -6,16 +6,20 @@
 //
 
 import UIKit
+import Combine
 
 final class DetailMainCell: UICollectionViewCell {
     
     // MARK: Properties
     static var reuseIdentifier: String { "DetailMainCell" }
     
+    private var cancellables = Set<AnyCancellable>()
+    
     private let appImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = .background
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -23,7 +27,6 @@ final class DetailMainCell: UICollectionViewCell {
     
     private let appNameLabel: UILabel = {
         let label = UILabel()
-        label.text = "아이디어스(idus)"
         label.textColor = .black
         label.font = .systemFont(ofSize: 22.0, weight: .bold)
         label.adjustsFontSizeToFitWidth = true
@@ -32,7 +35,6 @@ final class DetailMainCell: UICollectionViewCell {
     
     private let ratingLabel: UILabel = {
         let label = UILabel()
-        label.text = "4.7"
         label.textColor = .systemGray
         label.font = .systemFont(ofSize: 18.0, weight: .heavy)
         return label
@@ -46,7 +48,7 @@ final class DetailMainCell: UICollectionViewCell {
         let label = UILabel()
         label.text = "App Store"
         label.textColor = .white
-        label.font = .systemFont(ofSize: 14.0, weight: .medium)
+        label.font = .systemFont(ofSize: 15.0, weight: .medium)
         label.backgroundColor = .primary
         label.layer.cornerRadius = 16.0
         label.textAlignment = .center
@@ -56,7 +58,7 @@ final class DetailMainCell: UICollectionViewCell {
     
     private let shareButton: UIButton = {
         let button = UIButton()
-        let configuration = UIImage.SymbolConfiguration(pointSize: 22.0, weight: .semibold)
+        let configuration = UIImage.SymbolConfiguration(pointSize: 21.0, weight: .medium)
         let image = UIImage(systemName: "square.and.arrow.up", withConfiguration: configuration)
         button.setImage(image, for: .normal)
         return button
@@ -83,6 +85,12 @@ final class DetailMainCell: UICollectionViewCell {
         super.layoutSubviews()
         
         setShadowLayerPath()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.cancellables = Set<AnyCancellable>()
     }
     
     // MARK: Helpers
@@ -225,7 +233,44 @@ final class DetailMainCell: UICollectionViewCell {
 
 // MARK: - Bind
 extension DetailMainCell {
-    func bind() {
+    func bind(with viewModel: DetailMainCellViewModel) {
+        appstoreButton.tapPublisher
+            .sink { viewModel.input.appstoreButtonTapped.send($0) }
+            .store(in: &cancellables)
         
+        shareButton.tapPublisher
+            .sink { viewModel.input.shareButtonTapped.send($0) }
+            .store(in: &cancellables)
+        
+        viewModel.output.appImageData
+            .compactMap { $0 }
+            .map(UIImage.init)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] image in
+                self?.appImageView.image = image
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.appName
+            .sink { [weak self] name in
+                self?.appNameLabel.text = name
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.rating
+            .sink { [weak self] rating in
+                self?.ratingLabel.text = "\(rating)"
+                _ = self?.ratingView.setRating(rating)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.openAppstore
+            .sink { url in
+                if let url = url,
+                   UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url)
+                }
+            }
+            .store(in: &cancellables)
     }
 }

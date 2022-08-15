@@ -6,15 +6,19 @@
 //
 
 import UIKit
+import Combine
 
 final class DetailScreenshotCell: UICollectionViewCell {
     
     // MARK: Properties
     static var reuseIdentifier: String { "DetailScreenshotCell" }
     
+    private var cancellables = Set<AnyCancellable>()
+    
     private let screenshotImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -39,6 +43,12 @@ final class DetailScreenshotCell: UICollectionViewCell {
         super.layoutSubviews()
         
         setShadowLayerPath()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.cancellables = Set<AnyCancellable>()
     }
     
     // MARK: Helpers
@@ -86,7 +96,14 @@ final class DetailScreenshotCell: UICollectionViewCell {
 
 // MARK: - Bind
 extension DetailScreenshotCell {
-    func bind() {
-        
+    func bind(with viewModel: DetailScreenshotCellViewModel) {
+        viewModel.output.appImageData
+            .compactMap { $0 }
+            .map(UIImage.init)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] image in
+                self?.screenshotImageView.image = image
+            }
+            .store(in: &cancellables)
     }
 }

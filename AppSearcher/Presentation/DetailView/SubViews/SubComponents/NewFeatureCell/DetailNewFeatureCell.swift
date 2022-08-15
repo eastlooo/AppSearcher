@@ -14,7 +14,6 @@ final class DetailNewFeatureCell: UICollectionViewCell {
     
     private let versionLabel: UILabel = {
         let label = UILabel()
-        label.text = "ver 3.36.0"
         label.font = .systemFont(ofSize: 17.0, weight: .semibold)
         label.textColor = .systemGray
         return label
@@ -22,7 +21,6 @@ final class DetailNewFeatureCell: UICollectionViewCell {
     
     private let dateLabel: UILabel = {
         let label = UILabel()
-        label.text = "3일 전"
         label.font = .systemFont(ofSize: 16.0, weight: .semibold)
         label.textColor = .systemGray
         return label
@@ -61,19 +59,6 @@ final class DetailNewFeatureCell: UICollectionViewCell {
         contentView.backgroundColor = .white
         contentView.layer.cornerRadius = 13.0
         contentView.clipsToBounds = true
-        
-        let text = "이 버전에서는\n여러분이 알려주신 소소한 버그 수정 및 성능 개선이 되었습니다."
-        let paragraphSytle = NSMutableParagraphStyle()
-        paragraphSytle.lineBreakMode = .byCharWrapping
-        paragraphSytle.lineSpacing = 5.0
-        paragraphSytle.alignment = .left
-        contentsLabel.attributedText = NSAttributedString(
-            string: text,
-            attributes: [
-                .foregroundColor: UIColor.black,
-                .font: UIFont.systemFont(ofSize: 16.0, weight: .medium),
-                .paragraphStyle: paragraphSytle,
-            ])
     }
     
     private func layout() {
@@ -127,11 +112,50 @@ final class DetailNewFeatureCell: UICollectionViewCell {
             cornerRadius: contentView.layer.cornerRadius
         ).cgPath
     }
+    
+    private func getContentsNSAtrributedString(text: String) -> NSAttributedString {
+        let paragraphSytle = NSMutableParagraphStyle()
+        paragraphSytle.lineBreakMode = .byCharWrapping
+        paragraphSytle.lineSpacing = 5.0
+        paragraphSytle.alignment = .left
+        return NSAttributedString(
+            string: text,
+            attributes: [
+                .foregroundColor: UIColor.black,
+                .font: UIFont.systemFont(ofSize: 16.0, weight: .medium),
+                .paragraphStyle: paragraphSytle,
+            ])
+    }
+    
+    private func getDateText(date: Date?) -> String? {
+        return date
+            .flatMap { date -> Int? in
+                Calendar.current.dateComponents([.second], from: date, to: Date()).second
+            }
+            .flatMap { interval -> String in
+                switch interval {
+                case ..<60: // 초 단위
+                    return "방금"
+                case 60 ..< 3600: // 분 단위 [1분~60분]
+                    return "\(interval / 60)분 전"
+                case 3600 ..< 86400: // 시간 단위 [1시간~24시간]
+                    return "\(interval / 3600)시간 전"
+                case 86400 ..< 2592000: // 일 단위 [1일~30일]
+                    return "\(interval / 86400)일 전"
+                case 2592000 ..< 31536000: // 월 단위 [1개월~12개월]
+                    return "\(interval / 2592000)개월 전"
+                default:
+                    return "\(interval / 31536000)년 전"
+                }
+            }
+    }
 }
 
 // MARK: - Bind
 extension DetailNewFeatureCell {
-    func bind() {
-        
+    func bind(with newFeature: AppInfo.NewFeature) {
+        versionLabel.text = "ver \(newFeature.newVersion)"
+        contentsLabel.attributedText = getContentsNSAtrributedString(text: newFeature.releaseNotes)
+        dateLabel.text = getDateText(date: newFeature.updatedDate)
     }
 }

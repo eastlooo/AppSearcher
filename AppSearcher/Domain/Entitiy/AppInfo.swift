@@ -20,6 +20,7 @@ extension AppInfo {
         let appName: String // 앱 이름
         let appImageURL: URL? // 앱 아이콘
         let rating: Double // 평가
+        let userRatingCount: Int // 평가 수
         let marketURL: URL? // 앱스토어 이동, 공유
     }
     
@@ -38,10 +39,9 @@ extension AppInfo {
         let provider: String // 제공자
         let category: String // 카테고리
         let languages: [String] // 언어
-        let supportedDevices: [String] // 지원기기 목록
-        let minimumVersion: String // 앱 최소 버전
+        let price: String // 가격
         let ageRating: String // 연령 등급
-        let fileSizeBytes: Double? // 파일 크기
+        let fileSizeBytes: UInt? // 파일 크기
     }
 }
 

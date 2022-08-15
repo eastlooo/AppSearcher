@@ -49,16 +49,6 @@ final class MainViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            let viewController = DetailContainerViewController()
-            viewController.modalPresentationStyle = .overFullScreen
-            self.present(viewController, animated: false)
-        }
-    }
-    
     // MARK: Animations
     private func animateSearchViewHeight(show: Bool) {
         let height = show ? 80.0 : 0
@@ -173,7 +163,17 @@ final class MainViewController: UIViewController {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     self?.messageLabel.isHidden = isSearchingMode
                 }
-
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.showDetailView
+            .compactMap { $0 }
+            .debounce(for: 0.5, scheduler: RunLoop.main)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] viewModel in
+                let viewController = DetailContainerViewController(viewModel: viewModel)
+                viewController.modalPresentationStyle = .overFullScreen
+                self?.present(viewController, animated: false)
             }
             .store(in: &cancellables)
     }

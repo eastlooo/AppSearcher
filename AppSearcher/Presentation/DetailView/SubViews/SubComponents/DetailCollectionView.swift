@@ -76,7 +76,7 @@ final class DetailCollectionView: UICollectionView {
                                           groupHeight: .absolute(groupHeight),
                                           scrollDirection: .horizontal)
         section.orthogonalScrollingBehavior = .groupPaging
-        section.contentInsets = .init(top: 36.0, leading: sideMargin, bottom: 45.0, trailing: sideMargin)
+        section.contentInsets = .init(top: 36.0, leading: sideMargin, bottom: 65.0, trailing: sideMargin)
         let decorationItem = NSCollectionLayoutDecorationItem.background(
             elementKind: DetailReusableBackgroundView.reuseIdentifier)
         section.decorationItems = [decorationItem]
@@ -92,7 +92,7 @@ final class DetailCollectionView: UICollectionView {
                                           groupWidth: .fractionalWidth(1.0),
                                           groupHeight: estimatedHeight,
                                           scrollDirection: .horizontal)
-        section.contentInsets = .init(top: 0, leading: sideMargin, bottom: 45.0, trailing: sideMargin)
+        section.contentInsets = .init(top: 0, leading: sideMargin, bottom: 65.0, trailing: sideMargin)
         let sectionHeader = createSectionHeaderLayout(width: .absolute(headerWidth),
                                                             height: .absolute(35.0))
         section.boundarySupplementaryItems = [sectionHeader]
@@ -111,7 +111,7 @@ final class DetailCollectionView: UICollectionView {
                                           groupWidth: .fractionalWidth(1.0),
                                           groupHeight: estimatedHeight,
                                           scrollDirection: .horizontal)
-        section.contentInsets = .init(top: 0, leading: sideMargin, bottom: 45.0, trailing: sideMargin)
+        section.contentInsets = .init(top: 0, leading: sideMargin, bottom: 65.0, trailing: sideMargin)
         let sectionHeader = createSectionHeaderLayout(width: .absolute(headerWidth),
                                                             height: .absolute(35.0))
         section.boundarySupplementaryItems = [sectionHeader]

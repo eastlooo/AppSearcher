@@ -29,7 +29,7 @@ final class MainViewModel: ViewModelType {
     
     struct Output {
         let isSearchingMode: AnyPublisher<Bool, Never> // <-> View
-//        let showDetailView: AnyPublisher<Void, Never> // <-> View
+        let showDetailView: AnyPublisher<DetailViewModel?, Never> // <-> View
     }
     
     let dependency: Dependency
@@ -38,10 +38,11 @@ final class MainViewModel: ViewModelType {
     let input: Input
     let output: Output
     
-    private let isSearchingMode$ = CurrentValueSubject<Bool, Never>(false)
-    
     private let guideButtonTapped$ = PassthroughSubject<Void, Never>()
     private let searchedText$ = PassthroughSubject<String, Never>()
+    
+    private let isSearchingMode$ = CurrentValueSubject<Bool, Never>(false)
+    private let showDetailView$ = PassthroughSubject<DetailViewModel?, Never>()
     
     init(dependency: Dependency = Dependency()) {
         self.dependency = dependency
@@ -49,6 +50,7 @@ final class MainViewModel: ViewModelType {
         
         // MARK: Streams
         let isSearchingMode = isSearchingMode$.eraseToAnyPublisher()
+        let showDetailView = showDetailView$.eraseToAnyPublisher()
         
         // MARK: Input & Output
         self.input = Input(
@@ -57,13 +59,22 @@ final class MainViewModel: ViewModelType {
         )
         
         self.output = Output(
-            isSearchingMode: isSearchingMode
+            isSearchingMode: isSearchingMode,
+            showDetailView: showDetailView
         )
         
         // MARK: Binding
         guideButtonTapped$
+            .map { _ in UUID().uuidString }
             .combineLatest(isSearchingMode$)
+            .removeDuplicates { $0.0 == $1.0 }
             .map { !$0.1 }
+            .eraseToAnyPublisher()
+            .assign(to: \.value, on: isSearchingMode$)
+            .store(in: &cancellables)
+        
+        searchedText$
+            .map { _ in false }
             .eraseToAnyPublisher()
             .assign(to: \.value, on: isSearchingMode$)
             .store(in: &cancellables)
@@ -74,11 +85,16 @@ final class MainViewModel: ViewModelType {
             .sink { completion in
                 guard case let .failure(error) = completion else { return }
                 print("ERROR: \(error)")
-            } receiveValue: { appInfoPage in
-                print("DEBUG: appInfoPag \(appInfoPage)")
+            } receiveValue: { [weak self] appInfoPage in
+                guard appInfoPage.count > 0 && !appInfoPage.appInfos.isEmpty else {
+                    // Alert
+                    return
+                }
+                let appInfo = appInfoPage.appInfos[0]
+                let viewModel = DetailViewModel(dependency: .init(appInfo: appInfo))
+                self?.showDetailView$.send(viewModel)
             }
             .store(in: &cancellables)
-
         
         subViewModels.searchViewModel.output.searchedText
             .sink { [weak self] text in

@@ -48,8 +48,8 @@ final class DetailContainerViewController: UIViewController {
     private let childViewController: UINavigationController
     
     // MARK: Lifecycle
-    init() {
-        let rootViewController = DetailViewController()
+    init(viewModel: DetailViewModel) {
+        let rootViewController = DetailViewController(viewModel: viewModel)
         self.rootViewController = rootViewController
         self.childViewController = UINavigationController(rootViewController: rootViewController)
         super.init(nibName: nil, bundle: nil)

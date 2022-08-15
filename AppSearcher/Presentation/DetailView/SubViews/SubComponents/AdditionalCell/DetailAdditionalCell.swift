@@ -111,7 +111,8 @@ final class DetailAdditionalCell: UICollectionViewCell {
 
 // MARK: - Bind
 extension DetailAdditionalCell {
-    func bind() {
-        
+    func bind(with addtional: (String, String?)) {
+        titleLabel.text = addtional.0
+        contentsLabel.text = addtional.1
     }
 }
