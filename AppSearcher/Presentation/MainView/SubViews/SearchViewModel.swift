@@ -15,10 +15,12 @@ final class SearchViewModel: ViewModelType {
     struct Input {
         let text: CurrentValueSubject<String, Never>
         let searchButtonTapped: PassthroughSubject<Void, Never>
+        let deleteButtonTapped: PassthroughSubject<Void, Never>
     }
     
     struct Output {
         let searchedText: AnyPublisher<String, Never>
+        let hideDeleteButton: AnyPublisher<Bool, Never>
     }
     
     let dependency: Dependency
@@ -28,6 +30,7 @@ final class SearchViewModel: ViewModelType {
     
     private let text$ = CurrentValueSubject<String, Never>("")
     private let searchButtonTapped$ = PassthroughSubject<Void, Never>()
+    private let deleteButtonTapped$ = PassthroughSubject<Void, Never>()
     
     init(dependency: Dependency = Dependency()) {
         self.dependency = dependency
@@ -39,17 +42,26 @@ final class SearchViewModel: ViewModelType {
             .removeDuplicates { $0.0 == $1.0 }
             .map(\.1)
             .eraseToAnyPublisher()
+        let hideDeleteButton = text$
+            .map(\.isEmpty)
+            .eraseToAnyPublisher()
         
         // MARK: Input & Output
         self.input = Input(
             text: text$,
-            searchButtonTapped: searchButtonTapped$
+            searchButtonTapped: searchButtonTapped$,
+            deleteButtonTapped: deleteButtonTapped$
         )
         
         self.output = Output(
-            searchedText: searchedText
+            searchedText: searchedText,
+            hideDeleteButton: hideDeleteButton
         )
         
         // MARK: Binding
+        deleteButtonTapped$
+            .map { _ in "" }
+            .assign(to: \.value, on: text$)
+            .store(in: &cancellables)
     }
 }

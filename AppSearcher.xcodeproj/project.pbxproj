@@ -53,6 +53,7 @@
 		A78F764228AA0EF300BABDD5 /* DetailMainCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78F764128AA0EF300BABDD5 /* DetailMainCellViewModel.swift */; };
 		A78F764528AA0F1D00BABDD5 /* DetailScreenshotCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78F764428AA0F1D00BABDD5 /* DetailScreenshotCellViewModel.swift */; };
 		A78F764828AA0F3000BABDD5 /* DetailIntroduceCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78F764728AA0F3000BABDD5 /* DetailIntroduceCellViewModel.swift */; };
+		A78F764E28AA7B7F00BABDD5 /* ScreenshotViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78F764D28AA7B7F00BABDD5 /* ScreenshotViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -104,6 +105,7 @@
 		A78F764128AA0EF300BABDD5 /* DetailMainCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailMainCellViewModel.swift; sourceTree = "<group>"; };
 		A78F764428AA0F1D00BABDD5 /* DetailScreenshotCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailScreenshotCellViewModel.swift; sourceTree = "<group>"; };
 		A78F764728AA0F3000BABDD5 /* DetailIntroduceCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailIntroduceCellViewModel.swift; sourceTree = "<group>"; };
+		A78F764D28AA7B7F00BABDD5 /* ScreenshotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -322,6 +324,7 @@
 			isa = PBXGroup;
 			children = (
 				A76CAFDD28A8D628004E6DF4 /* ScreenshotViewController.swift */,
+				A78F764D28AA7B7F00BABDD5 /* ScreenshotViewModel.swift */,
 			);
 			path = ScreenshotView;
 			sourceTree = "<group>";
@@ -508,6 +511,7 @@
 				A78D042128A54BC5000625D3 /* AppDelegate.swift in Sources */,
 				A76CAFA828A683BE004E6DF4 /* FetchAppInfoRequestDTO.swift in Sources */,
 				A76CAFD628A7DF43004E6DF4 /* DetailNewFeatureCell.swift in Sources */,
+				A78F764E28AA7B7F00BABDD5 /* ScreenshotViewModel.swift in Sources */,
 				A76CAF7D28A60E63004E6DF4 /* Combine++UIControl.swift in Sources */,
 				A78D042328A54BC5000625D3 /* SceneDelegate.swift in Sources */,
 				A76CAFB428A6917C004E6DF4 /* DefaultImageRepository.swift in Sources */,

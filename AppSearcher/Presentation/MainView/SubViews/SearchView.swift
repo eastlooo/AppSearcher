@@ -43,6 +43,15 @@ final class SearchView: UIView {
         return button
     }()
     
+    private let deleteButton: UIButton = {
+        let button = UIButton()
+        let configuration = UIImage.SymbolConfiguration(pointSize: 20.0, weight: .medium)
+        let image = UIImage(systemName: "xmark.circle.fill", withConfiguration: configuration)
+        button.setImage(image, for: .normal)
+        button.tintColor = .systemGray4
+        return button
+    }()
+    
     // MARK: Lifecycle
     init(viewModel: SearchViewModel) {
         self.viewModel = viewModel
@@ -75,6 +84,11 @@ final class SearchView: UIView {
     }
     
     private func layout() {
+        let hStackView = UIStackView(arrangedSubviews: [searchTextField, deleteButton])
+        hStackView.axis = .horizontal
+        hStackView.distribution = .fill
+        hStackView.spacing = 0
+        
         self.addSubview(searchBackgroundView)
         searchBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -83,29 +97,33 @@ final class SearchView: UIView {
                 toItem: self, attribute: .left, multiplier: 1.0, constant: 20.0),
             NSLayoutConstraint(
                 item: searchBackgroundView, attribute: .right, relatedBy: .equal,
-                toItem: self, attribute: .right, multiplier: 1.0, constant: -20.0),
+                toItem: self, attribute: .right, multiplier: 1.0, constant: -40.0),
             NSLayoutConstraint(
                 item: searchBackgroundView, attribute: .bottom, relatedBy: .equal,
                 toItem: self, attribute: .bottom, multiplier: 1.0, constant: -15.0),
             searchBackgroundView.heightAnchor.constraint(equalToConstant: 40.0),
         ])
-
-        searchBackgroundView.addSubview(searchTextField)
-        searchTextField.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addSubview(hStackView)
+        hStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             NSLayoutConstraint(
-                item: searchTextField, attribute: .top, relatedBy: .equal,
-                toItem: searchBackgroundView, attribute: .top, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(
-                item: searchTextField, attribute: .left, relatedBy: .equal,
+                item: hStackView, attribute: .left, relatedBy: .equal,
                 toItem: searchBackgroundView, attribute: .left, multiplier: 1.0, constant: 20.0),
             NSLayoutConstraint(
-                item: searchTextField, attribute: .right, relatedBy: .equal,
-                toItem: searchBackgroundView, attribute: .right, multiplier: 1.0, constant: -20.0),
+                item: hStackView, attribute: .right, relatedBy: .equal,
+                toItem: searchBackgroundView, attribute: .right, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(
-                item: searchTextField, attribute: .bottom, relatedBy: .equal,
-                toItem: searchBackgroundView, attribute: .bottom, multiplier: 1.0, constant: 0),
+                item: hStackView, attribute: .centerY, relatedBy: .equal,
+                toItem: searchBackgroundView, attribute: .centerY, multiplier: 1.0, constant: 0),
         ])
+        
+        deleteButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            deleteButton.widthAnchor.constraint(equalToConstant: 44.0),
+            deleteButton.heightAnchor.constraint(equalToConstant: 44.0),
+        ])
+
         
         accessoryView.frame.size.width = UIScreen.main.bounds.width
         accessoryView.frame.size.height = 48.0
@@ -132,6 +150,19 @@ final class SearchView: UIView {
         searchButton.tapPublisher
             .sink { [weak self] _ in
                 self?.viewModel.input.searchButtonTapped.send()
+            }
+            .store(in: &cancellables)
+        
+        deleteButton.tapPublisher
+            .sink { [weak self] _ in
+                self?.searchTextField.text = ""
+                self?.viewModel.input.deleteButtonTapped.send()
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.hideDeleteButton
+            .sink { [weak self] hide in
+                self?.deleteButton.isHidden = hide
             }
             .store(in: &cancellables)
     }

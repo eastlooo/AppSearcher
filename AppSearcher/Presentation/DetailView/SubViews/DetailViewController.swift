@@ -11,11 +11,13 @@ import Combine
 final class DetailViewController: UIViewController {
     
     // MARK: Properties
+    weak var containerViewController: DetailContainerViewController?
+    
     var isScrollEnabled: Bool = false // <-> ContainerView
-    private(set) var isScrollsTop: Bool = true // <-> ContainerView
     
     private let viewModel: DetailViewModel
     private var cancellables = Set<AnyCancellable>()
+    private let itemSelected$ = PassthroughSubject<IndexPath, Never>()
     
     private var mainDataSource: DetailMainCellViewModel? {
         didSet { updateMainSection(mainDataSource) }
@@ -53,6 +55,18 @@ final class DetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        containerViewController?.isDismissable = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        containerViewController?.isDismissable = false
+    }
+    
     deinit { print("DetailViewController deinit..") }
     
     // MARK: Helpers
@@ -84,6 +98,14 @@ final class DetailViewController: UIViewController {
     }
     
     private func bind() {
+        itemSelected$
+            .filter { $0.section == 1 }
+            .map(\.item)
+            .sink { [weak self] item in
+                self?.viewModel.input.screenshotItemSelected.send(item)
+            }
+            .store(in: &cancellables)
+        
         viewModel.output.mainDataSource
             .compactMap { $0 }
             .sink { [weak self] dataSource in
@@ -128,6 +150,13 @@ final class DetailViewController: UIViewController {
         viewModel.output.updateCollectionLayout
             .sink { [weak self] _ in
                 self?.collectionView.collectionViewLayout.invalidateLayout()
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.showScreenshotView
+            .sink { [weak self] viewModel in
+                let viewController = ScreenshotViewController(viewModel: viewModel)
+                self?.navigationController?.pushViewController(viewController, animated: true)
             }
             .store(in: &cancellables)
     }
@@ -242,19 +271,16 @@ extension DetailViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 extension DetailViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.section == 1 {
-            let viewContoller = ScreenshotViewController()
-            self.navigationController?.pushViewController(viewContoller, animated: true)
-        }
+        itemSelected$.send(indexPath)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let defaultOffset = navigationController?.navigationBar.frame.height else { return }
         if scrollView.contentOffset.y < -defaultOffset || !isScrollEnabled {
             scrollView.contentOffset.y = -defaultOffset
-            isScrollsTop = true
+            containerViewController?.isDismissable = true
         } else {
-            isScrollsTop = false
+            containerViewController?.isDismissable = false
         }
     }
 }

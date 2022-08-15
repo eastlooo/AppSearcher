@@ -10,6 +10,10 @@ import UIKit
 final class DetailContainerViewController: UIViewController {
     
     // MARK: Properties
+    var isDismissable: Bool = true {
+        didSet { holderView.isHidden = !isDismissable }
+    }
+    
     private let defaultHeight: CGFloat = UIScreen.main.bounds.height - safeAreaTopInset
     private var dismissibleHeight: CGFloat { defaultHeight * 0.7 }
     private var currentContainerHeight: CGFloat = UIScreen.main.bounds.height - safeAreaTopInset
@@ -54,6 +58,8 @@ final class DetailContainerViewController: UIViewController {
         self.childViewController = UINavigationController(rootViewController: rootViewController)
         super.init(nibName: nil, bundle: nil)
         
+        rootViewController.containerViewController = self
+        
         configure()
         layout()
     }
@@ -67,6 +73,8 @@ final class DetailContainerViewController: UIViewController {
         
         animatePresentContainer()
     }
+    
+    deinit { print("DetailContainerViewController deinit..") }
     
     // MARK: Animations
     private func animatePresentContainer() {
@@ -105,7 +113,7 @@ final class DetailContainerViewController: UIViewController {
         
         let translation = gesture.translation(in: view)
         
-        guard rootViewController.isScrollsTop else {
+        guard isDismissable else {
             storedTanslationY = translation.y
             return
         }
@@ -200,6 +208,7 @@ final class DetailContainerViewController: UIViewController {
     }
 }
 
+// MARK: - UIGestureRecognizerDelegate
 extension DetailContainerViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true

@@ -5,7 +5,7 @@
 //  Created by 정동천 on 2022/08/15.
 //
 
-import UIKit
+import Foundation
 import Combine
 
 final class DetailViewModel: ViewModelType {
@@ -15,6 +15,7 @@ final class DetailViewModel: ViewModelType {
     }
     
     struct Input {
+        let screenshotItemSelected: PassthroughSubject<Int, Never> // <-> View
         let shareURL: PassthroughSubject<URL?, Never> // <-> Main
         let updateCollectionLayout: PassthroughSubject<Void, Never> // <-> Introduce
     }
@@ -26,7 +27,8 @@ final class DetailViewModel: ViewModelType {
         let newFeatureDataSource: AnyPublisher<AppInfo.NewFeature, Never> // <-> View
         let additionalDataSource: AnyPublisher<[(String, String?)], Never> // <-> View
         let openShare: AnyPublisher<URL?, Never> // <-> View
-        let updateCollectionLayout: AnyPublisher<Void, Never>
+        let updateCollectionLayout: AnyPublisher<Void, Never> // <-> View
+        let showScreenshotView: AnyPublisher<ScreenshotViewModel, Never> // <-> View
     }
     
     let dependency: Dependency
@@ -36,6 +38,7 @@ final class DetailViewModel: ViewModelType {
     
     private let appInfo$: CurrentValueSubject<AppInfo, Never>
     
+    private let screenshotItemSelected$ = PassthroughSubject<Int, Never>()
     private let shareURL$ = PassthroughSubject<URL?, Never>()
     private let updateCollectionLayout$ = PassthroughSubject<Void, Never>()
     
@@ -69,9 +72,21 @@ final class DetailViewModel: ViewModelType {
             .eraseToAnyPublisher()
         let openShare = shareURL$.eraseToAnyPublisher()
         let updateCollectionLayout = updateCollectionLayout$.eraseToAnyPublisher()
+        let showScreenshotView = screenshotItemSelected$
+            .map { _ in UUID().uuidString }
+            .combineLatest(screenshotItemSelected$, appInfo$)
+            .removeDuplicates { $0.0 == $1.0 }
+            .map { (index: $0.1, urls: $0.2.screenshotURLs) }
+            .map { element -> ScreenshotViewModel in
+                let dependency = ScreenshotViewModel.Dependency(
+                    index: element.index, screenshotURLs: element.urls)
+                return ScreenshotViewModel(dependency: dependency)
+            }
+            .eraseToAnyPublisher()
         
         // MARK: Input & Output
         self.input = Input(
+            screenshotItemSelected: screenshotItemSelected$,
             shareURL: shareURL$,
             updateCollectionLayout: updateCollectionLayout$
         )
@@ -83,7 +98,8 @@ final class DetailViewModel: ViewModelType {
             newFeatureDataSource: newFeatureDataSource,
             additionalDataSource: additionalDataSource,
             openShare: openShare,
-            updateCollectionLayout: updateCollectionLayout
+            updateCollectionLayout: updateCollectionLayout,
+            showScreenshotView: showScreenshotView
         )
         
         // MARK: Binding
