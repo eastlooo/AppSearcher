@@ -176,5 +176,15 @@ final class MainViewController: UIViewController {
                 self?.present(viewController, animated: false)
             }
             .store(in: &cancellables)
+        
+        viewModel.output.showAlert
+            .debounce(for: 0.5, scheduler: RunLoop.main)
+            .receive(on: DispatchQueue.main)
+            .sink { message in
+                let message = "유효하지 않은 APP_ID 입니다."
+                let alert = AlertView(message: message)
+                alert.show()
+            }
+            .store(in: &cancellables)
     }
 }

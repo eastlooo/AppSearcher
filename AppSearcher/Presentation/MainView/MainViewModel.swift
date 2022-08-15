@@ -30,6 +30,7 @@ final class MainViewModel: ViewModelType {
     struct Output {
         let isSearchingMode: AnyPublisher<Bool, Never> // <-> View
         let showDetailView: AnyPublisher<DetailViewModel?, Never> // <-> View
+        let showAlert: AnyPublisher<String, Never> // <-> View
     }
     
     let dependency: Dependency
@@ -43,6 +44,7 @@ final class MainViewModel: ViewModelType {
     
     private let isSearchingMode$ = CurrentValueSubject<Bool, Never>(false)
     private let showDetailView$ = PassthroughSubject<DetailViewModel?, Never>()
+    private let showAlert$ = PassthroughSubject<String, Never>()
     
     init(dependency: Dependency = Dependency()) {
         self.dependency = dependency
@@ -51,6 +53,7 @@ final class MainViewModel: ViewModelType {
         // MARK: Streams
         let isSearchingMode = isSearchingMode$.eraseToAnyPublisher()
         let showDetailView = showDetailView$.eraseToAnyPublisher()
+        let showAlert = showAlert$.eraseToAnyPublisher()
         
         // MARK: Input & Output
         self.input = Input(
@@ -60,7 +63,8 @@ final class MainViewModel: ViewModelType {
         
         self.output = Output(
             isSearchingMode: isSearchingMode,
-            showDetailView: showDetailView
+            showDetailView: showDetailView,
+            showAlert: showAlert
         )
         
         // MARK: Binding
@@ -82,12 +86,15 @@ final class MainViewModel: ViewModelType {
         searchedText$
             .setFailureType(to: Error.self)
             .flatMap(dependency.appInfoRepository.fetchAppInfo)
-            .sink { completion in
+            .sink { [weak self] completion in
                 guard case let .failure(error) = completion else { return }
                 print("ERROR: \(error)")
+                let errorMessage = "유효하지 않은 APP_ID 입니다."
+                self?.showAlert$.send(errorMessage)
             } receiveValue: { [weak self] appInfoPage in
                 guard appInfoPage.count > 0 && !appInfoPage.appInfos.isEmpty else {
-                    // Alert
+                    let errorMessage = "유효하지 않은 APP_ID 입니다."
+                    self?.showAlert$.send(errorMessage)
                     return
                 }
                 let appInfo = appInfoPage.appInfos[0]

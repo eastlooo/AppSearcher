@@ -70,3 +70,15 @@ extension CALayer {
         CALayer.createShadowLayer(offSet: .init(width: 0, height: position))
     }
 }
+
+// MARK: - UIWindow
+extension UIWindow {
+    static var keyWindow: UIWindow? {
+        UIApplication
+            .shared
+            .connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap(\.windows)
+            .first { $0.isKeyWindow }
+    }
+}

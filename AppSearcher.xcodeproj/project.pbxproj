@@ -54,6 +54,7 @@
 		A78F764528AA0F1D00BABDD5 /* DetailScreenshotCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78F764428AA0F1D00BABDD5 /* DetailScreenshotCellViewModel.swift */; };
 		A78F764828AA0F3000BABDD5 /* DetailIntroduceCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78F764728AA0F3000BABDD5 /* DetailIntroduceCellViewModel.swift */; };
 		A78F764E28AA7B7F00BABDD5 /* ScreenshotViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78F764D28AA7B7F00BABDD5 /* ScreenshotViewModel.swift */; };
+		A78F765028AAAF6000BABDD5 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78F764F28AAAF6000BABDD5 /* AlertView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -106,6 +107,7 @@
 		A78F764428AA0F1D00BABDD5 /* DetailScreenshotCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailScreenshotCellViewModel.swift; sourceTree = "<group>"; };
 		A78F764728AA0F3000BABDD5 /* DetailIntroduceCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailIntroduceCellViewModel.swift; sourceTree = "<group>"; };
 		A78F764D28AA7B7F00BABDD5 /* ScreenshotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotViewModel.swift; sourceTree = "<group>"; };
+		A78F764F28AAAF6000BABDD5 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +128,7 @@
 				A76CAF8428A62BCA004E6DF4 /* MainView */,
 				A76CAFBB28A7AE7E004E6DF4 /* DetailView */,
 				A76CAFDF28A8D70B004E6DF4 /* ScreenshotView */,
+				A78F765128AAAF6400BABDD5 /* AlertView */,
 				A76CAFE328A96338004E6DF4 /* Components */,
 			);
 			path = Presentation;
@@ -430,6 +433,14 @@
 			path = ReusableView;
 			sourceTree = "<group>";
 		};
+		A78F765128AAAF6400BABDD5 /* AlertView */ = {
+			isa = PBXGroup;
+			children = (
+				A78F764F28AAAF6000BABDD5 /* AlertView.swift */,
+			);
+			path = AlertView;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -521,6 +532,7 @@
 				A76CAFBD28A7AE9D004E6DF4 /* DetailViewController.swift in Sources */,
 				A76CAF8828A62C22004E6DF4 /* SearchViewModel.swift in Sources */,
 				A76CAFDC28A8C3E6004E6DF4 /* DetailReusableBackgroundView.swift in Sources */,
+				A78F765028AAAF6000BABDD5 /* AlertView.swift in Sources */,
 				A76CAFC328A7CF47004E6DF4 /* LayoutVariable.swift in Sources */,
 				A76CAFBA28A6E02C004E6DF4 /* DefaultAppInfoRepository.swift in Sources */,
 				A76CAFB228A6916B004E6DF4 /* ImageRepository.swift in Sources */,
