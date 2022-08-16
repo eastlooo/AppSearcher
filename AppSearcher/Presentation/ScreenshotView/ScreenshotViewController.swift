@@ -64,6 +64,7 @@ final class ScreenshotViewController: UICollectionViewController {
             .store(in: &cancellables)
         
         viewDidLayoutSubviews$
+            .debounce(for: 0.05, scheduler: RunLoop.main)
             .zip(viewModel.output.index)
             .map(\.1)
             .sink { [weak self] index in
