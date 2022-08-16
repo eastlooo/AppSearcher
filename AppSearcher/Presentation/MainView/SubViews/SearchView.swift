@@ -97,7 +97,7 @@ final class SearchView: UIView {
                 toItem: self, attribute: .left, multiplier: 1.0, constant: 20.0),
             NSLayoutConstraint(
                 item: searchBackgroundView, attribute: .right, relatedBy: .equal,
-                toItem: self, attribute: .right, multiplier: 1.0, constant: -40.0),
+                toItem: self, attribute: .right, multiplier: 1.0, constant: -20.0),
             NSLayoutConstraint(
                 item: searchBackgroundView, attribute: .bottom, relatedBy: .equal,
                 toItem: self, attribute: .bottom, multiplier: 1.0, constant: -15.0),

@@ -58,7 +58,10 @@ final class DetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        containerViewController?.isDismissable = true
+        if let defaultOffset = navigationController?.navigationBar.frame.height,
+           collectionView.contentOffset.y == -defaultOffset {
+            containerViewController?.isDismissable = true
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

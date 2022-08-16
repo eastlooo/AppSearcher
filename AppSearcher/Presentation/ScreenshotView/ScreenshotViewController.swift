@@ -13,6 +13,7 @@ final class ScreenshotViewController: UICollectionViewController {
     // MARK: Properties
     private let viewModel: ScreenshotViewModel
     private var cancellables = Set<AnyCancellable>()
+    private let viewDidLayoutSubviews$ = PassthroughSubject<Void, Never>()
     
     private var screenshotDataSource: [DetailScreenshotCellViewModel] = [] {
         didSet { updateScreenshotSection() }
@@ -31,6 +32,14 @@ final class ScreenshotViewController: UICollectionViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        viewDidLayoutSubviews$.send()
+    }
+    
+    deinit { print("ScreenshotViewController deinit..") }
     
     // MARK: Helpers
     private func configure() {
@@ -51,6 +60,17 @@ final class ScreenshotViewController: UICollectionViewController {
         viewModel.output.screenshotDataSource
             .sink { [weak self] dataSource in
                 self?.screenshotDataSource = dataSource
+            }
+            .store(in: &cancellables)
+        
+        viewDidLayoutSubviews$
+            .zip(viewModel.output.index)
+            .map(\.1)
+            .sink { [weak self] index in
+                self?.collectionView.scrollToItem(
+                    at: IndexPath(item: index, section: 0),
+                    at: .centeredHorizontally,
+                    animated: false)
             }
             .store(in: &cancellables)
     }

@@ -20,7 +20,7 @@ final class MainViewController: UIViewController {
     private let messageLabel: UILabel = {
         let label = UILabel()
         label.text = "터치하여 검색하기"
-        label.font = .systemFont(ofSize: 20.0, weight: .heavy)
+        label.font = .systemFont(ofSize: 21.0, weight: .black)
         label.textColor = .primary
         return label
     }()
@@ -43,10 +43,17 @@ final class MainViewController: UIViewController {
         configure()
         layout()
         bind()
+        addNotificationCenter()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        animateGuideButton(true)
     }
     
     // MARK: Animations
@@ -62,6 +69,36 @@ final class MainViewController: UIViewController {
                     }
             )
             self.view.layoutIfNeeded()
+        }
+    }
+    
+    private func animateGuideButton(_ animate: Bool) {
+        guideButton.layer.removeAllAnimations()
+        let scaleAnimation = CABasicAnimation(keyPath: "transform.scale.xy")
+        scaleAnimation.fromValue = 1
+        scaleAnimation.toValue = 1.09
+
+        let animationGroup = CAAnimationGroup()
+        animationGroup.duration = 1.0
+        animationGroup.repeatCount = .infinity
+        animationGroup.timingFunction = CAMediaTimingFunction(name: .easeOut)
+        animationGroup.autoreverses = true
+        animationGroup.animations = [scaleAnimation]
+        
+        if animate {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                self.guideButton.layer.add(animationGroup, forKey: "pulse")
+            }
+        } else {
+            guideButton.layer.removeAnimation(forKey: "pulse")
+        }
+    }
+    
+    // MARK: Actions
+    @objc
+    private func observeWillEnterForegroundNotification() {
+        if !messageLabel.isHidden {
+            animateGuideButton(true)
         }
     }
     
@@ -128,7 +165,7 @@ final class MainViewController: UIViewController {
                 toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(
                 item: messageLabel, attribute: .top, relatedBy: .equal,
-                toItem: guideButton, attribute: .centerY, multiplier: 1.0, constant: 100.0),
+                toItem: guideButton, attribute: .centerY, multiplier: 1.0, constant: 110.0),
         ])
         
         view.addSubview(searchView)
@@ -149,7 +186,9 @@ final class MainViewController: UIViewController {
     
     private func bind() {
         guideButton.tapPublisher
+            .throttle(for: 0.7, scheduler: RunLoop.main, latest: true)
             .sink { [weak self] _ in
+                HapticManager.instance.impact(style: .medium)
                 self?.viewModel.input.guideButtonTapped.send()
             }
             .store(in: &cancellables)
@@ -158,6 +197,7 @@ final class MainViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .dropFirst()
             .sink { [weak self] isSearchingMode in
+                self?.animateGuideButton(!isSearchingMode)
                 self?.animateSearchViewHeight(show: isSearchingMode)
                 self?.searchView.setFirstResponder(to: isSearchingMode)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -168,7 +208,6 @@ final class MainViewController: UIViewController {
         
         viewModel.output.showDetailView
             .compactMap { $0 }
-            .debounce(for: 0.5, scheduler: RunLoop.main)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] viewModel in
                 let viewController = DetailContainerViewController(viewModel: viewModel)
@@ -178,13 +217,20 @@ final class MainViewController: UIViewController {
             .store(in: &cancellables)
         
         viewModel.output.showAlert
-            .debounce(for: 0.5, scheduler: RunLoop.main)
             .receive(on: DispatchQueue.main)
             .sink { message in
+                HapticManager.instance.notification(type: .warning)
                 let message = "유효하지 않은 APP_ID 입니다."
                 let alert = AlertView(message: message)
                 alert.show()
             }
             .store(in: &cancellables)
+    }
+    
+    private func addNotificationCenter() {
+        NotificationCenter.default.addObserver(self,
+            selector: #selector(observeWillEnterForegroundNotification),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil)
     }
 }

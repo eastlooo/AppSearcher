@@ -55,6 +55,7 @@
 		A78F764828AA0F3000BABDD5 /* DetailIntroduceCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78F764728AA0F3000BABDD5 /* DetailIntroduceCellViewModel.swift */; };
 		A78F764E28AA7B7F00BABDD5 /* ScreenshotViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78F764D28AA7B7F00BABDD5 /* ScreenshotViewModel.swift */; };
 		A78F765028AAAF6000BABDD5 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78F764F28AAAF6000BABDD5 /* AlertView.swift */; };
+		A78F765728AB633A00BABDD5 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78F765628AB633A00BABDD5 /* HapticManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -108,6 +109,7 @@
 		A78F764728AA0F3000BABDD5 /* DetailIntroduceCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailIntroduceCellViewModel.swift; sourceTree = "<group>"; };
 		A78F764D28AA7B7F00BABDD5 /* ScreenshotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotViewModel.swift; sourceTree = "<group>"; };
 		A78F764F28AAAF6000BABDD5 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
+		A78F765628AB633A00BABDD5 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +163,7 @@
 				A76CAFB528A6B5F4004E6DF4 /* ControlPublisher.swift */,
 				A76CAF8028A6159B004E6DF4 /* ViewModelType.swift */,
 				A76CAFC228A7CF47004E6DF4 /* LayoutVariable.swift */,
+				A78F765628AB633A00BABDD5 /* HapticManager.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -312,7 +315,7 @@
 		A76CAFC428A7D6A2004E6DF4 /* SubComponents */ = {
 			isa = PBXGroup;
 			children = (
-				A76CAFD928A7F089004E6DF4 /* DetailCollectionView.swift */,
+				A78F765528AAC97D00BABDD5 /* CollectionView */,
 				A78F764328AA0EF800BABDD5 /* MainCell */,
 				A78F764628AA0F2100BABDD5 /* ScreenshotCell */,
 				A78F764928AA0F3400BABDD5 /* IntroduceCell */,
@@ -441,6 +444,14 @@
 			path = AlertView;
 			sourceTree = "<group>";
 		};
+		A78F765528AAC97D00BABDD5 /* CollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				A76CAFD928A7F089004E6DF4 /* DetailCollectionView.swift */,
+			);
+			path = CollectionView;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -552,6 +563,7 @@
 				A76CAFDA28A7F089004E6DF4 /* DetailCollectionView.swift in Sources */,
 				A76CAFE528A963DA004E6DF4 /* RatingView.swift in Sources */,
 				A78F764228AA0EF300BABDD5 /* DetailMainCellViewModel.swift in Sources */,
+				A78F765728AB633A00BABDD5 /* HapticManager.swift in Sources */,
 				A76CAFB628A6B5F4004E6DF4 /* ControlPublisher.swift in Sources */,
 				A76CAF9428A64002004E6DF4 /* Endpoint.swift in Sources */,
 				A76CAF9A28A64292004E6DF4 /* Provider.swift in Sources */,

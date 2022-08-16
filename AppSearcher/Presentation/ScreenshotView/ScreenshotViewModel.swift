@@ -61,4 +61,6 @@ final class ScreenshotViewModel: ViewModelType {
         self.index$ = index$
         self.screenshotURLs$ = screenshotURLs$
     }
+    
+    deinit { print("ScreenshotViewModel deinit..") }
 }
